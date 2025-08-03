@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simple_chat_app/components/my_drawer.dart';
 import 'package:simple_chat_app/components/my_user_tile.dart';
+import 'package:simple_chat_app/models/user_model.dart';
 import 'package:simple_chat_app/pages/chat_page.dart';
 import 'package:simple_chat_app/services/auth/auth_service.dart';
 import 'package:simple_chat_app/services/chat/chat_service.dart';
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildUserList() {
-    return StreamBuilder(
+    return StreamBuilder<List<UserModel>>(
       stream: _chatService.getUsers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -40,44 +41,26 @@ class HomePage extends StatelessWidget {
           return Center(child: Text('No users found.'));
         } else {
           final users = snapshot.data!;
-          // return ListView.builder(
-          //   itemCount: users.length,
-          //   itemBuilder: (context, index) {
-          //     final user = users[index];
-          //     return ListTile(
-          //       title: Text(user.name),
-          //       subtitle: Text(user.email),
-          //       onTap: () {
-          //         // Handle user tap
-          //       },
-          //     );
-          //   },
-          // );
 
-          return ListView(
-            children: snapshot.data!
-                .map<Widget>(
-                  (userData) => _buildUserListItem(userData, context),
-                )
-                .toList(),
+          return ListView.builder(
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              return _buildUserListItem(users[index], context);
+            },
           );
         }
       },
     );
   }
 
-  Widget _buildUserListItem(
-    Map<String, dynamic> userData,
-    BuildContext context,
-  ) {
+  Widget _buildUserListItem(UserModel user, BuildContext context) {
     return MyUserTile(
-      text: userData['name'],
+      text: user.name,
       onTap: () {
-        // Handle user tap, e.g., navigate to chat page
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatPage(receiverEmail: userData['email']),
+            builder: (context) => ChatPage(receiverEmail: user.email),
           ),
         );
       },

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simple_chat_app/models/user_model.dart';
 
 class ChatService {
   // get Instance of Firestore
@@ -23,12 +24,11 @@ class ChatService {
   ];
 
   */
-  Stream<List<Map<String, dynamic>>> getUsers() {
+  Stream<List<UserModel>> getUsers() {
     return _firestore.collection('users').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
-        final user = doc.data();
-
-        return user;
+        final data = doc.data();
+        return UserModel.fromMap(data);
       }).toList();
     });
   }
