@@ -54,13 +54,18 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildUserListItem(UserModel user, BuildContext context) {
+    // Check if the user is the current user
+    if (user.uid == _authService.getCurrentUser()?.uid) {
+      return SizedBox.shrink(); // Skip displaying the current user
+    }
     return MyUserTile(
       text: user.name,
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatPage(receiverEmail: user.email),
+            builder: (context) =>
+                ChatPage(receiverEmail: user.email, receiverName: user.name),
           ),
         );
       },
