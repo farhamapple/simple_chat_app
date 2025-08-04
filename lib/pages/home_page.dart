@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:simple_chat_app/auth/auth_service.dart';
 import 'package:simple_chat_app/components/my_drawer.dart';
+import 'package:simple_chat_app/components/my_user_tile.dart';
+import 'package:simple_chat_app/models/user_model.dart';
+import 'package:simple_chat_app/pages/chat_page.dart';
+import 'package:simple_chat_app/services/auth/auth_service.dart';
+import 'package:simple_chat_app/services/chat/chat_service.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
-  void logoutAction(BuildContext context) {
-    // Implement logout logic here
-    // For example, call AuthService to sign out
-    final AuthService authService = AuthService();
-    authService.signOut();
-  }
+  // chat & auth Service
+  final AuthService _authService = AuthService();
+  final ChatService _chatService = ChatService();
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +23,52 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => logoutAction(context),
-          ),
-        ],
       ),
       drawer: const MyDrawer(),
-      body: Center(
-        child: Text(
-          'Welcome to the Home Page!',
-          style: TextStyle(
-            fontSize: 24,
-            color: Theme.of(context).colorScheme.primary,
+      body: _buildUserList(),
+    );
+  }
+
+  Widget _buildUserList() {
+    return StreamBuilder<List<UserModel>>(
+      stream: _chatService.getUsers(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No users found.'));
+        } else {
+          final users = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: users.length,
+            itemBuilder: (context, index) {
+              return _buildUserListItem(users[index], context);
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildUserListItem(UserModel user, BuildContext context) {
+    // Check if the user is the current user
+    if (user.uid == _authService.getCurrentUser()?.uid) {
+      return SizedBox.shrink(); // Skip displaying the current user
+    }
+    return MyUserTile(
+      text: user.name,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ChatPage(receiverEmail: user.email, receiverName: user.name),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

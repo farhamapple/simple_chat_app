@@ -107,4 +107,8 @@ class AuthService {
 
     return UserModel(uid: uid, name: name, email: email, createdAt: createdAt);
   }
+
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_chat_app/auth/login_or_register.dart';
+import 'package:simple_chat_app/services/auth/login_or_register.dart';
 import 'package:simple_chat_app/pages/home_page.dart';
 
 class AuthGate extends StatelessWidget {
@@ -16,7 +16,7 @@ class AuthGate extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
             // User is signed in, navigate to home page or dashboard
-            return const HomePage();
+            return HomePage();
           } else {
             // User is not signed in, navigate to login or register page
             return const LoginOrRegister();

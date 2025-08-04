@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:simple_chat_app/services/auth/auth_service.dart';
 import 'package:simple_chat_app/pages/home_page.dart';
 import 'package:simple_chat_app/pages/setting_page.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
+
+  void logoutAction() {
+    // Implement logout logic here
+    // For example, call AuthService to sign out
+    final _authService = AuthService();
+    _authService.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +38,7 @@ class MyDrawer extends StatelessWidget {
                     // Navigate to home page if needed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      MaterialPageRoute(builder: (context) => HomePage()),
                     );
                   },
                 ),
@@ -62,10 +70,7 @@ class MyDrawer extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.logout, color: Colors.white),
               title: Text('L O G O U T', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Navigate to settings page if needed
-              },
+              onTap: logoutAction,
             ),
           ),
         ],
