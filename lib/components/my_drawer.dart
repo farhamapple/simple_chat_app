@@ -9,8 +9,8 @@ class MyDrawer extends StatelessWidget {
   void logoutAction() {
     // Implement logout logic here
     // For example, call AuthService to sign out
-    final _authService = AuthService();
-    _authService.signOut();
+    final AuthService authService = AuthService();
+    authService.signOut();
   }
 
   @override

@@ -27,6 +27,7 @@ class LoginPage extends StatelessWidget {
     catch (e) {
       // Handle login error, e.g., show a snackbar or dialog
       showDialog(
+        // ignore: use_build_context_synchronously
         context: context,
         builder: (context) {
           return AlertDialog(
