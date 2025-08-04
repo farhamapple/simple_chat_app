@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simple_chat_app/auth/auth_service.dart';
 import 'package:simple_chat_app/components/my_drawer.dart';
-import 'package:simple_chat_app/pages/login_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,8 +8,8 @@ class HomePage extends StatelessWidget {
   void logoutAction(BuildContext context) {
     // Implement logout logic here
     // For example, call AuthService to sign out
-    final _authService = AuthService();
-    _authService.signOut();
+    final AuthService authService = AuthService();
+    authService.signOut();
   }
 
   @override

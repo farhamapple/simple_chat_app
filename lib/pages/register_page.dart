@@ -15,7 +15,7 @@ class RegisterPage extends StatelessWidget {
 
   void registerAction(BuildContext context) {
     // Implement registration logic here
-    final _authService = AuthService();
+    final AuthService authService = AuthService();
 
     if (passwordController.text != confirmPasswordController.text) {
       // Show error if passwords do not match
@@ -60,7 +60,7 @@ class RegisterPage extends StatelessWidget {
       return;
     }
     // Try to register the user
-    _authService.signUpWithEmailAndPassword(
+    authService.signUpWithEmailAndPassword(
       nameController.text,
       emailController.text,
       passwordController.text,
